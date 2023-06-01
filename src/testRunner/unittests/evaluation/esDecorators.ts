@@ -2471,6 +2471,25 @@ describe("unittests:: evaluation:: esDecorators", () => {
                 `;
                 assert.isTrue(result);
             });
+
+            it("class decorator with exported class", () => {
+                const {
+                    TestClass,
+                } = exec`
+                    function TestDecorator() {
+                        return <T extends { new(...args: any[]): object }>(constructor: T, context: ClassDecoratorContext) => constructor;
+                    }
+
+                    @TestDecorator()
+                    export class TestClass {
+                        test() {
+                            console.log('test function executed');
+                        }
+                    }
+                `;
+
+                assert.deepEqual((new TestClass()).test(), 'test function executed');
+            });
         });
     }
 });
